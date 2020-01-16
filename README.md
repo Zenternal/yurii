@@ -1,6 +1,6 @@
 # yurii
-================
-## 🤖 an all purpose discord.js bot
+
+### 🤖 an all purpose discord.js bot
 Yurii is an all purpose discord.js bot, with over 20 commands. The bot is maintained by [Zenternal](https://github.com/Zenternal), anyone pretending to own Yurii that doesn't have the github username Zenternal, or the discord tag Zenternal#0212 is an imposter.
 
 ### Links
