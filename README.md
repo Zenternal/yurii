@@ -17,13 +17,11 @@ We open sourced this project so you can understand more how the bot works, and p
 We do NOT support using our source code, and hosting your own public bot with it.\
 If you're to use our bot independently, use it for private use, and do not try upload it to a bot list. 
 
-#### Configure Yurii
+#### Installing Yurii
+When you've downloaded the source files, cd into the directory, and type npm rebuild. This'll download all the packages neccessary to run Yurii.
+
 Everything can be configured in config.json. Replace INSERT-TOKEN to your bot token, and https://yurii.pw with your URL that hosts the yurii-web.
 
 #### Dependencies
  - node-gyp
  - better-sqlite3
-
-### Issues
-If you have any self inflicted issues with our source code, please join our [Support Discord](https://discord.gg/) and state your issue in the code-help channel.
-If you have problems, notice any bugs, or have any suggestions for the actual bot, post a Github issue. All bugs, problems and suggestions will be pushed onto the github within 10 days of the official update.
