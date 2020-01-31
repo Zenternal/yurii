@@ -2,5 +2,6 @@
   "token"  : "DISCORD BOT TOKEN",
   "prefix" : "~",
   "url" : "https://yurii.pw",
-  "web_key" : "SECRET WEB KEY"
+  "web_key" : "SECRET WEB KEY",
+  "bot_owner" : "165170547192233985"
 }
