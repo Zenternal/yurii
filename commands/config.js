@@ -57,7 +57,7 @@ module.exports.run = async (client, message, args) => {
     message.channel.send(cEmbed);
   }else if(args[0] === "prefix"){
     // prefix start
-    if(!args[0])
+    if(!args[1])
       return message.channel.send(`<:sadcat:665710784759857171> Please specify a prefix`);
 
     prefixes[message.guild.id] = {

@@ -20,5 +20,5 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.info = {
   name: "ban",
-  aliases: ['ban']
+  aliases: []
 }

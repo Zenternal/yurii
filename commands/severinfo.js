@@ -15,6 +15,7 @@ module.exports.run = async (client, message, args) => {
   .setDescription(`🔹 Server ID: **${message.guild.id}**
   🔹 Owner: **${message.guild.owner.user.tag}**
   🔹 Created: **${createdGuildTime[0]}**
+  🔹 Region: **${message.guild.region}**
   🔹 Channels: **${message.guild.channels.size}**
   🔹 Total Members: **${message.guild.memberCount}**
   `)

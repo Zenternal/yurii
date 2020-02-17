@@ -13,10 +13,6 @@ serverData = db.prepare('SELECT * FROM serverdata WHERE server_id=?');
 fs.readdir("./commands/", (err, files) => {
   if(err) console.error(err);
   let jsfiles = files.filter(f => f.split(".").pop() === "js");
-  if(jsfiles.length <= 0){
-	console.log("No commands to load!");
-	return;
-  }
   console.log(`Loading ${jsfiles.length} commands`);
   jsfiles.forEach((f, i) => {
 	let props = require(`./commands/${f}`);
@@ -39,8 +35,8 @@ const activities_list = [
 
 client.on("ready", () => {
   https.get(`${config.url}/api/updateCount?key=${config.web_key}&users=${client.users.size}&guilds=${client.guilds.size}`);
-  console.log(`Yurii (v1.0.0) has successfully started, with ${client.users.size} users, in ${client.channels.size} channels on ${client.guilds.size} guilds.`); 
-  // console.log(client.commands);
+  console.log(`\x1b[36mYurii (v1.1.0)\x1b[0m has successfully started, with ${client.users.size} users, in ${client.channels.size} channels on ${client.guilds.size} guilds.`); 
+  // console.log(client.commands); \x1b[0m
   setInterval(() => {
 	const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 	client.user.setActivity(activities_list[index], {type: "LISTENING"}); 
@@ -49,12 +45,12 @@ client.on("ready", () => {
 
 client.on('guildMemberAdd', member => {
   https.get(`${config.url}/api/updateCount?key=${config.web_key}&users=${client.users.size}&guilds=${client.guilds.size}`);
-  console.log(`New member: ${member.displayName} (${member.id}) joined: ${member.guild.name} (${member.guild.id})`)
+  console.log('\x1b[38;5;41m', `New member:\x1b[0m ${member.displayName} (${member.id}) joined: ${member.guild.name} (${member.guild.id})`)
 });
 
 client.on('error', console.error);
 client.on("guildCreate", guild => {
-  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+  console.log('\x1b[38;5;41m', `New guild joined:\x1b[0m ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   https.get(`${config.url}/api/updateCount?key=${config.web_key}&users=${client.users.size}&guilds=${client.guilds.size}`);
 });
 
@@ -63,13 +59,12 @@ client.on("guildDelete", guild => {
   https.get(`${config.url}/api/updateCount?key=${config.web_key}&users=${client.users.size}&guilds=${client.guilds.size}`);
 });
 
-// this was left by brian //
-
 client.on("messageDelete", async message => {
   if(message.author.id === '665701380488429589')
 	return;
   serverId = message.guild.id;
   const row = serverData.get(serverId);
+  if(!row) return;
   if(!row.chatlogs){
 	return;
   }else{
@@ -85,12 +80,34 @@ client.on("messageDelete", async message => {
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
   if(oldMessage.author.id === '665701380488429589')
-	return;
+	  return;
   
   serverId = oldMessage.guild.id;
-  const row = serverData.get(serverId);
+
+    // automod
+    const row = serverData.get(serverId);
+    if(!row){}else{
+      if(row.am_max_mentions === "off"){}else{
+        if (newMessage.member.hasPermission("MANAGE_MESSAGES")){}else{
+          if(newMessage.mentions.members.size > row.am_max_mentions){
+            newMessage.delete().then(oldMessage.channel.send(`<:sadcat:665710784759857171> you hit the mention limit`));
+          }
+        }
+      }
+      if(row.am_anti_invite === 1){
+        if (newMessage.member.hasPermission("MANAGE_MESSAGES")){}else{
+          if (newMessage.content.includes('discord.gg/') || newMessage.content.includes('discordapp.com/invite/')) {
+            newMessage.delete().then(
+              oldMessage.channel.send(`<:sadcat:665710784759857171> you can't send invite links here`),
+              console.warn(`${newMessage.content} removed from ${newMessage.guild.id}`)
+            )
+          }
+        }
+      }
+    }
+    // automod
+
   if(!row.chatlogs){
-	return;
   }else{
 	try{
 	  let chatlogChannel = oldMessage.guild.channels.find(c => c.id === `${row.chatlogs}`);
@@ -115,6 +132,34 @@ client.on("message", async message => {
   }
   let prefix = prefixes[message.guild.id].prefixes;
 
+    // automod 
+    // message.channel.send(`${message.mentions.members.size} users mentioned`);
+
+
+    serverId = message.guild.id;
+    const srow = serverData.get(serverId);
+    if(!srow){}else{
+      if(srow.am_max_mentions === "off"){}else{
+        if (message.member.hasPermission("MANAGE_MESSAGES")){}else{
+          if(message.mentions.members.size > srow.am_max_mentions){
+            message.delete().then(message.channel.send(`<:sadcat:665710784759857171> you hit the mention limit`));
+          }
+        }
+      }
+      if(srow.am_anti_invite === 1){
+        if (message.member.hasPermission("MANAGE_MESSAGES")){}else{
+          if (message.content.includes('discord.gg/') || message.content.includes('discordapp.com/invite/')) {
+            message.delete().then(
+              message.channel.send(`<:sadcat:665710784759857171> you can't send invite links here`),
+              console.warn(`${message.content} removed from ${message.guild.id}`)
+            )
+          }
+        }
+      }
+    }
+  
+    // automod
+
   // userdata shit
   userId = message.author.id;
   getUserData = db.prepare('SELECT * FROM userdata WHERE discord_id=?');
@@ -135,12 +180,13 @@ client.on("message", async message => {
 
   if(client.commands.has(cmd)) {
 	  command = client.commands.get(cmd);
-  } else{
+  }else{
 	  command = client.commands.get(client.aliases.get(cmd));
   }
   if(!command)
-	return;
+	  return;
   command.run(client, message, args);
+
 });
 
 
