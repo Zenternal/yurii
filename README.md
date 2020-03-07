@@ -18,6 +18,8 @@ We do NOT support using our source code, and hosting your own public bot with it
 If you're to use our bot independently, use it for private use, and do not try upload it to a bot list. 
 
 #### Installing Yurii
+Yurii bot is built for Discord.JS 1.14.x\
+
 When you've downloaded the source files, cd into the directory, and type npm rebuild. This'll download all the packages neccessary to run Yurii.
 
 Everything can be configured in config.json. Replace INSERT-TOKEN to your bot token, and https://yurii.pw with your URL that hosts the yurii-web.
